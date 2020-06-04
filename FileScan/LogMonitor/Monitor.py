@@ -1,14 +1,62 @@
-
-import linecache
+import json
 import os
 
-filename = '/Users/lfd/Documents/workspace.nosync/log/webApi_err.log'
-# print(linecache.getline(filename, 2))
-# print(len(linecache.getlines(filename)))
-# print(os.path.getsize(filename))
-f = open(filename, 'r')
-print(f.seek(0, 2))
-f.seek(14956,0)
-print(f.read(22434-14956))
+from FileScan.Utils import RedisUtils, RockmqProducer
 
-f.close()
+
+redis_ = RedisUtils.get_conn()
+
+
+# 获取文件增加的内容
+def get_log_content(path_):
+    org_size = redis_.get('size|' + path_)
+    new_size = os.path.getsize(path_)
+    content_ = ''
+    if org_size is None:
+        return
+    # 文件内容有新增
+    elif new_size > int(org_size):
+        f = open(path_, 'r')
+        # 定位到上次的位置
+        f.seek(int(org_size), 0)
+        # 读取所有新增的内容
+        content_ = f.read(new_size - int(org_size))
+        f.close()
+    # 文件清空，切换日期
+    elif new_size < int(org_size):
+        f = open(path_, 'r')
+        if new_size == 0:
+            f.seek(0, 0)
+        else:
+            content_ = f.read()
+            f.seek(new_size, 0)
+        f.close()
+    # 重新设定文件位置
+    redis_.set('size|' + path, new_size)
+    return content_
+    # f = open(path, 'r')
+
+
+# 从redis中得到value
+def get_value(key):
+    if redis_.get(key) is not None:
+        return json.loads(redis_.get(key))
+    else:
+        print(key + " is Null")
+
+
+# 发送MQ消息
+def send_msg(content_):
+    RockmqProducer.send_msg("key", "tag", content)
+
+
+if __name__ == '__main__':
+    file_paths = get_value("log_file_monitor")
+    if file_paths is not None:
+        for path in file_paths:
+            print(path)
+            content = get_log_content(path)
+            print(content)
+            if len(str(content).strip()) != 0:
+                # send_msg(content)
+                print(1)
