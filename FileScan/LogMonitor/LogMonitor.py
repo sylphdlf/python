@@ -3,7 +3,6 @@ import os
 import pyinotify
 from FileScan.Utils import RabbitmqProducer as Producer
 from FileScan.Utils import RedisUtils
-from FileScan.Utils import FileWatch
 
 redis_ = RedisUtils.get_conn()
 multi_event = pyinotify.IN_MODIFY
