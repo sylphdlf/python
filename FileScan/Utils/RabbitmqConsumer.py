@@ -4,7 +4,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host='127.0.0.1',
 
 channel = connection.channel()
 
-channel.queue_declare(queue='mq_to_nodejs')
+channel.queue_declare(queue='mq_to_nodejs', durable=True)
 
 
 def callback(ch, method, properties, body):
@@ -13,6 +13,6 @@ def callback(ch, method, properties, body):
 
 
 # 告诉rabbitmq使用callback来接收信息
-channel.basic_consume('mq_to_nodejs', callback, False)
+channel.basic_consume('mq_to_nodejs', callback, auto_ack=False)
 
 channel.start_consuming()

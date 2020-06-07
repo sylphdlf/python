@@ -1,8 +1,8 @@
 import json
 import os
 
-from FileScan.Utils import RedisUtils, RockmqProducer
-
+from FileScan.Utils import RabbitmqProducer as Producer
+from FileScan.Utils import RedisUtils
 
 redis_ = RedisUtils.get_conn()
 
@@ -47,16 +47,13 @@ def get_value(key):
 
 # 发送MQ消息
 def send_msg(content_):
-    RockmqProducer.send_msg("key", "tag", content)
+    Producer.send_msg("mq_to_nodejs", content_)
 
 
 if __name__ == '__main__':
     file_paths = get_value("log_file_monitor")
     if file_paths is not None:
         for path in file_paths:
-            print(path)
             content = get_log_content(path)
-            print(content)
             if len(str(content).strip()) != 0:
-                # send_msg(content)
-                print(1)
+                send_msg(json.dumps({'key': str(path).rsplit(os.sep, 1)[1], 'value': content}))
