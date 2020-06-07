@@ -1,10 +1,30 @@
 import json
 import os
-
+import pyinotify
 from FileScan.Utils import RabbitmqProducer as Producer
 from FileScan.Utils import RedisUtils
+from FileScan.Utils import FileWatch
 
 redis_ = RedisUtils.get_conn()
+multi_event = pyinotify.IN_MODIFY
+wm = pyinotify.WatchManager()
+
+
+class MyEventHandler(pyinotify.ProcessEvent):
+    @staticmethod
+    def process_IN_MODIFY(event):
+        print('MODIFY-', event.pathname)
+        content = get_log_content(path)
+        if len(str(content).strip()) != 0:
+            send_msg(json.dumps({'key': str(path).rsplit(os.sep, 1)[1], 'value': content}))
+
+
+notifier = pyinotify.Notifier(wm, MyEventHandler())
+notifier.loop()
+
+
+def add_file_watch(path_):
+    wm.add_watch(path_, multi_event)
 
 
 # 获取文件增加的内容
@@ -54,6 +74,4 @@ if __name__ == '__main__':
     file_paths = get_value("log_file_monitor")
     if file_paths is not None:
         for path in file_paths:
-            content = get_log_content(path)
-            if len(str(content).strip()) != 0:
-                send_msg(json.dumps({'key': str(path).rsplit(os.sep, 1)[1], 'value': content}))
+            add_file_watch(path)
