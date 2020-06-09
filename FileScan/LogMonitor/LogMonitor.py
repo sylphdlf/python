@@ -17,7 +17,7 @@ def get_log_content(path_):
     new_size = os.path.getsize(path_)
     content_ = ''
     if org_size is None:
-        redis_.set('size|' + path, 0)
+        # redis_.set('size|' + path, 0)
         return
     # 文件内容有新增
     elif new_size > int(org_size):
@@ -64,7 +64,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_MODIFY(self, event):
         print('MODIFY-', event.pathname)
         content = get_log_content(event.pathname)
-        if len(str(content)) != 0:
+        print(len(str(content).strip()))
+        if len(str(content).strip()) > 0:
             print(content)
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
 
@@ -73,8 +74,8 @@ notifier = pyinotify.Notifier(wm, MyEventHandler())
 
 file_paths = get_value("log_file_monitor")
 if file_paths is not None:
-    for path in file_paths:
-        wm.add_watch(path, multi_event)
+    for inner_path in file_paths:
+        wm.add_watch(inner_path, multi_event)
 
 notifier.loop()
 
