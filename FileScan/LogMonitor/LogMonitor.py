@@ -77,4 +77,5 @@ if __name__ == '__main__':
     file_paths = get_value("log_file_monitor")
     if file_paths is not None:
         for path in file_paths:
+            print(path)
             add_file_watch(path)
