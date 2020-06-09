@@ -82,4 +82,4 @@ if __name__ == '__main__':
     if file_paths is not None:
         for path in file_paths:
             print(path)
-            FileWatch.add_file_watch(path)
+            add_file_watch(path)
