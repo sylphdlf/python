@@ -1,5 +1,5 @@
 import sys
-sys.path.append("/data/project/cloud/python/FileScan")
+sys.path.append("/data/project/cloud/python/FileScan/")
 
 import os
 import json
