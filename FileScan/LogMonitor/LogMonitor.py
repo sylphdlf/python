@@ -65,7 +65,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print('MODIFY-', event.pathname)
         content = get_log_content(event.pathname)
         print(content == 'None')
-        print(content == null)
+        print(content == 'null')
         if len(str(content).strip()) > 0 and content != 'None':
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
 
