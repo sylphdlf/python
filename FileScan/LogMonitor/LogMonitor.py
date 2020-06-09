@@ -5,7 +5,6 @@ import os
 import json
 import RabbitmqProducer as Producer
 import RedisUtils
-import FileWatch
 import pyinotify
 
 
@@ -61,7 +60,7 @@ wm = pyinotify.WatchManager()
 
 class MyEventHandler(pyinotify.ProcessEvent):
 
-    def process_IN_MODIFY(event):
+    def process_IN_MODIFY(self, event):
         print('MODIFY-', event.pathname)
         content = get_log_content(path)
         if len(str(content).strip()) != 0:
@@ -70,16 +69,16 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 notifier = pyinotify.Notifier(wm, MyEventHandler())
 
-
-def add_file_watch(path_):
-    wm.add_watch(path_, multi_event)
-
+file_paths = get_value("log_file_monitor")
+if file_paths is not None:
+    for path in file_paths:
+        wm.add_watch(path, multi_event)
 
 notifier.loop()
 
-if __name__ == '__main__':
-    file_paths = get_value("log_file_monitor")
-    if file_paths is not None:
-        for path in file_paths:
-            print(path)
-            add_file_watch(path)
+# if __name__ == '__main__':
+#     file_paths = get_value("log_file_monitor")
+#     if file_paths is not None:
+#         for path in file_paths:
+#             print(path)
+#             add_file_watch(path)
