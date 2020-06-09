@@ -4,8 +4,8 @@ sys.path.append("/data/project/cloud/python/FileScan/Utils/")
 import os
 import json
 import pyinotify
-from Utils import RabbitmqProducer as Producer
-from Utils import RedisUtils
+import RabbitmqProducer as Producer
+import RedisUtils
 
 
 redis_ = RedisUtils.get_conn()
