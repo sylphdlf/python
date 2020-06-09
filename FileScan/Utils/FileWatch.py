@@ -23,4 +23,7 @@ def add_file_watch(path_):
 
 notifier.loop()
 
+if __name__ == '__main__':
+    add_file_watch("/data/sh/log/registry.log")
+
 
