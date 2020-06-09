@@ -2,12 +2,8 @@ import sys
 import os
 import json
 import pyinotify
-from Utils import RabbitmqProducer as Producer
-from Utils import RedisUtils
-
-curPath = os.path.abspath(os.path.dirname(__file__))
-rootPath = os.path.split(curPath)[0]
-sys.path.append(rootPath)
+from . Utils import RabbitmqProducer as Producer
+from . Utils import RedisUtils
 
 
 redis_ = RedisUtils.get_conn()
