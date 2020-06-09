@@ -1,4 +1,6 @@
 import sys
+sys.path.append("/data/project/cloud/python/FileScan")
+
 import os
 import json
 import pyinotify
