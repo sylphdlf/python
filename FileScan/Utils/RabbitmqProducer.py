@@ -8,6 +8,3 @@ def send_msg(topic_, content_):
     channel.basic_publish(exchange='', routing_key='mq_to_nodejs', body=content_)
     connection.close()
 
-
-if __name__ == '__main__':
-    send_msg("mq_to_nodejs", "test---")

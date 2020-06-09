@@ -2,8 +2,8 @@ import sys
 import os
 import json
 import pyinotify
-from . Utils import RabbitmqProducer as Producer
-from . Utils import RedisUtils
+from FileScan.Utils import RabbitmqProducer as Producer
+from FileScan.Utils import RedisUtils
 
 
 redis_ = RedisUtils.get_conn()
