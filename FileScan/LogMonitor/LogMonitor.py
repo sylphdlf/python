@@ -1,8 +1,8 @@
 import json
 import os
 import pyinotify
-from FileScan.Utils import RabbitmqProducer as Producer
-from FileScan.Utils import RedisUtils
+from Utils import RabbitmqProducer as Producer
+from Utils import RedisUtils
 
 redis_ = RedisUtils.get_conn()
 multi_event = pyinotify.IN_MODIFY
