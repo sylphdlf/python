@@ -1,8 +1,11 @@
-import json
+import sys
 import os
+import json
 import pyinotify
-from Utils import RabbitmqProducer as Producer
-from Utils import RedisUtils
+
+from .Utils import RabbitmqProducer as Producer
+from .Utils import RedisUtils
+
 
 redis_ = RedisUtils.get_conn()
 multi_event = pyinotify.IN_MODIFY
