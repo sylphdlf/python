@@ -6,6 +6,7 @@ import json
 import RabbitmqProducer as Producer
 import RedisUtils
 import FileWatch
+import pyinotify
 
 
 redis_ = RedisUtils.get_conn()
@@ -53,6 +54,28 @@ def get_value(key):
 def send_msg(content_):
     Producer.send_msg("mq_to_nodejs", content_)
 
+
+multi_event = pyinotify.IN_MODIFY
+wm = pyinotify.WatchManager()
+
+
+class MyEventHandler(pyinotify.ProcessEvent):
+
+    def process_IN_MODIFY(event):
+        print('MODIFY-', event.pathname)
+        content = get_log_content(path)
+        if len(str(content).strip()) != 0:
+            send_msg(json.dumps({'key': str(path).rsplit(os.sep, 1)[1], 'value': content}))
+
+
+notifier = pyinotify.Notifier(wm, MyEventHandler())
+
+
+def add_file_watch(path_):
+    wm.add_watch(path_, multi_event)
+
+
+notifier.loop()
 
 if __name__ == '__main__':
     file_paths = get_value("log_file_monitor")
