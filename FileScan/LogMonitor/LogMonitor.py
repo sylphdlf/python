@@ -64,7 +64,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print('MODIFY-', event.pathname)
         content = get_log_content(event.pathname)
         if len(str(content)) != 0:
-            send_msg(json.dumps({'key': str(path).rsplit(os.sep, 1)[1], 'value': content}))
+            print(content)
+            send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
 
 
 notifier = pyinotify.Notifier(wm, MyEventHandler())
