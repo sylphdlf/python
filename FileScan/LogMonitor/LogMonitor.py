@@ -17,6 +17,7 @@ def get_log_content(path_):
     new_size = os.path.getsize(path_)
     content_ = ''
     if org_size is None:
+        redis_.set('size|' + path, 0)
         return
     # 文件内容有新增
     elif new_size > int(org_size):
