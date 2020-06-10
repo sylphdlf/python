@@ -18,6 +18,7 @@ def get_log_content(path_):
     content_ = ''
     if org_size is None:
         redis_.set('size|' + path_, 0)
+        print("org_size is None")
         return
     # 文件内容有新增
     elif new_size > int(org_size):
@@ -26,13 +27,16 @@ def get_log_content(path_):
         f.seek(int(org_size), 0)
         # 读取所有新增的内容
         content_ = f.read(new_size - int(org_size))
+        print("new_size > int(org_size)")
         f.close()
     # 文件清空，切换日期
     elif new_size < int(org_size):
         f = open(path_, 'r')
         if new_size == 0:
             f.seek(0, 0)
+            print("new_size < int(org_size) new_size == 0")
         else:
+            print("new_size < int(org_size) else")
             content_ = f.read()
             f.seek(new_size, 0)
         f.close()
