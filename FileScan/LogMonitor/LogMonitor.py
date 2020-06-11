@@ -72,7 +72,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 
 def start_watch():
-    multi_event = pyinotify.IN_MODIFY | pyinotify.process_IN_MOVE_SELF
+    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, MyEventHandler())
 
