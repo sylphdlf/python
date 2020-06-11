@@ -10,7 +10,6 @@ import pyinotify
 
 redis_ = RedisUtils.get_conn()
 
-
 # 获取文件增加的内容
 def get_log_content(path_):
     org_size = redis_.get('size|' + path_)
@@ -59,31 +58,31 @@ def send_msg(content_):
     Producer.send_msg("mq_to_nodejs", content_)
 
 
-multi_event = pyinotify.IN_MODIFY
-wm = pyinotify.WatchManager()
-
-
 class MyEventHandler(pyinotify.ProcessEvent):
 
-    def process_IN_MODIFY(self, event):
+    def process_IN_MODIFY(self, event):#文件修改
         print('MODIFY-', event.pathname)
         content = get_log_content(event.pathname)
-        if len(str(content).strip()) > 0 and content is not None:
+        if content is not None and len(str(content).strip()) > 0:
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
 
+    def process_IN_MOVE_SELF(self, event):#日志打包，移动
+        notifier.stop()
+        start_watch()
 
-notifier = pyinotify.Notifier(wm, MyEventHandler())
 
-file_paths = get_value("log_file_monitor")
-if file_paths is not None:
-    for inner_path in file_paths:
-        wm.add_watch(inner_path, multi_event)
+def start_watch():
+    multi_event = pyinotify.IN_MODIFY | pyinotify.process_IN_MOVE_SELF
+    wm = pyinotify.WatchManager()
+    notifier = pyinotify.Notifier(wm, MyEventHandler())
 
-notifier.loop()
+    file_paths = get_value("log_file_monitor")
+    if file_paths is not None:
+        for inner_path in file_paths:
+            wm.add_watch(inner_path, multi_event)
 
-# if __name__ == '__main__':
-#     file_paths = get_value("log_file_monitor")
-#     if file_paths is not None:
-#         for path in file_paths:
-#             print(path)
-#             add_file_watch(path)
+    notifier.loop()
+
+
+if __name__ == '__main__':
+    start_watch()
