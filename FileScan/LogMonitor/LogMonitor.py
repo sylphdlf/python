@@ -76,8 +76,8 @@ def start_watch():
     multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
     wm = pyinotify.WatchManager()
     while True:
+        notifier = None
         notifier = pyinotify.Notifier(wm, MyEventHandler())
-
         file_paths = get_value("log_file_monitor")
         if file_paths is not None:
             for inner_path in file_paths:
