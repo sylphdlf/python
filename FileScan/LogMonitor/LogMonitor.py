@@ -75,13 +75,14 @@ def start_watch():
     global notifier
     multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
     wm = pyinotify.WatchManager()
-    notifier = pyinotify.Notifier(wm, MyEventHandler())
-
-    file_paths = get_value("log_file_monitor")
-    if file_paths is not None:
-        for inner_path in file_paths:
-            wm.add_watch(inner_path, multi_event)
     while True:
+        notifier.clear()
+        notifier = pyinotify.Notifier(wm, MyEventHandler())
+
+        file_paths = get_value("log_file_monitor")
+        if file_paths is not None:
+            for inner_path in file_paths:
+                wm.add_watch(inner_path, multi_event)
         notifier.loop()
         print("start_watch")
         time.sleep(5)
