@@ -74,6 +74,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
 def start_watch():
     global notifier
     while True:
+        notifier.cleanup()
         multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
         wm = pyinotify.WatchManager()
         notifier = pyinotify.Notifier(wm, MyEventHandler())
