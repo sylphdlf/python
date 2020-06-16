@@ -65,22 +65,21 @@ class MyEventHandler(pyinotify.ProcessEvent):
         content = get_log_content(event.pathname)
         if content is not None and len(str(content).strip()) > 0:
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
-
-    def process_IN_MOVED_FROM(self, event):#日志打包，移动
-        print("IN_MOVED_FROM")
+    #
+    # def process_IN_MOVED_FROM(self, event):#日志打包，移动
+    #     print("IN_MOVED_FROM")
 
 
 def start_watch():
     global notifier
+    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM
+    wm = pyinotify.WatchManager()
+    notifier = pyinotify.Notifier(wm, MyEventHandler())
+    file_paths = get_value("log_file_monitor")
+    if file_paths is not None:
+        for inner_path in file_paths:
+            wm.add_watch(inner_path, multi_event)
     while True:
-        notifier = None
-        multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM
-        wm = pyinotify.WatchManager()
-        notifier = pyinotify.Notifier(wm, MyEventHandler())
-        file_paths = get_value("log_file_monitor")
-        if file_paths is not None:
-            for inner_path in file_paths:
-                wm.add_watch(inner_path, multi_event)
         notifier.loop()
         print("start_watch")
         time.sleep(5)
