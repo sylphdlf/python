@@ -69,12 +69,12 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_MOVE_SELF(self, event):#日志打包，移动
         global notifier
         notifier.stop()
+        notifier.cleanup()
 
 
 def start_watch():
     global notifier
     while True:
-        notifier.cleanup()
         multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
         wm = pyinotify.WatchManager()
         notifier = pyinotify.Notifier(wm, MyEventHandler())
