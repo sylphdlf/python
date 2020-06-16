@@ -68,7 +68,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def process_IN_MOVE_SELF(self, event):#日志打包，移动
         global notifier
-        notifier.loop.stop()
+        notifier.stop()
 
 
 def start_watch():
