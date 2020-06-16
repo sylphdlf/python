@@ -73,10 +73,10 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 def start_watch():
     global notifier
-    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
-    wm = pyinotify.WatchManager()
     while True:
         notifier = None
+        multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
+        wm = pyinotify.WatchManager()
         notifier = pyinotify.Notifier(wm, MyEventHandler())
         file_paths = get_value("log_file_monitor")
         if file_paths is not None:
