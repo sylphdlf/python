@@ -75,13 +75,15 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 
 def start_watch():
-    global notifier
-    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
-    wm = pyinotify.WatchManager()
-    notifier = pyinotify.Notifier(wm, MyEventHandler())
-    file_paths = get_value("log_file_monitor")
     while True:
+        print("sleep 5")
         time.sleep(5)
+        global notifier
+        notifier = None
+        multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF
+        wm = pyinotify.WatchManager()
+        notifier = pyinotify.Notifier(wm, MyEventHandler())
+        file_paths = get_value("log_file_monitor")
         try:
             if file_paths is not None:
                 for inner_path in file_paths:
@@ -89,7 +91,6 @@ def start_watch():
             notifier.loop()
         except Exception as e:
             print(e)
-        print("sleep 5")
 
 
 if __name__ == '__main__':
