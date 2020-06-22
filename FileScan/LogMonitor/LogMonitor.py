@@ -68,9 +68,9 @@ class MyEventHandler(pyinotify.ProcessEvent):
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
 
     def process_IN_MOVE_SELF(self, event):#日志打包，移动
-        # global notifier
+        global notifier
         print(print('MOVED_SELF-', event.pathname))
-        # notifier.stop()
+        notifier.stop()
 
 
 def start_watch():
@@ -79,13 +79,13 @@ def start_watch():
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, MyEventHandler())
     file_paths = get_value("log_file_monitor")
-    if file_paths is not None:
-        for inner_path in file_paths:
-            wm.add_watch(inner_path, multi_event)
     while True:
+        if file_paths is not None:
+            for inner_path in file_paths:
+                wm.add_watch(inner_path, multi_event)
         notifier.loop()
-        print("start_watch")
         time.sleep(5)
+        print("sleep 5")
 
 
 if __name__ == '__main__':
