@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-import pyinotify
+from pyinotify import WatchManager, Notifier
 sys.path.append("/data/project/cloud/python/FileScan/Utils/")
 
 import RabbitmqProducer as Producer
@@ -10,6 +10,7 @@ import RedisUtils
 
 redis_ = RedisUtils.get_conn()
 notifier = None
+
 
 # 获取文件增加的内容
 def get_log_content(path_):
@@ -65,14 +66,16 @@ class MyEventHandler(pyinotify.ProcessEvent):
         content = get_log_content(event.pathname)
         if content is not None and len(str(content).strip()) > 0:
             send_msg(json.dumps({'key': str(event.pathname).rsplit(os.sep, 1)[1], 'value': content}))
-    #
-    # def process_IN_MOVED_FROM(self, event):#日志打包，移动
-    #     print("IN_MOVED_FROM")
+
+    def process_IN_MOVED_SELF(self, event):#日志打包，移动
+        global notifier
+        print(print('MOVED_SELF-', event.pathname))
+        notifier.stop()
 
 
 def start_watch():
     global notifier
-    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM
+    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_SELF
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, MyEventHandler())
     file_paths = get_value("log_file_monitor")
