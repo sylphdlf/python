@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-from pyinotify import WatchManager, Notifier
+import pyinotify
 sys.path.append("/data/project/cloud/python/FileScan/Utils/")
 
 import RabbitmqProducer as Producer
