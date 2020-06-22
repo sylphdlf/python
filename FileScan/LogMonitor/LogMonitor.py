@@ -72,10 +72,15 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print(print('MOVED_SELF-', event.pathname))
         notifier.stop()
 
+    def process_IN_MOVED_FROM(self, event):#日志打包，移动
+        global notifier
+        print(print('MOVED_FROM-', event.pathname))
+        notifier.stop()
+
 
 def start_watch():
     global notifier
-    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_TO
+    multi_event = pyinotify.IN_MODIFY | pyinotify.IN_MOVED_TO | pyinotify.IN_MOVED_FROM
     wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, MyEventHandler())
     file_paths = get_value("log_file_monitor")
