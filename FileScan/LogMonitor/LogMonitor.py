@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import pyinotify
+import time
 sys.path.append("/data/project/cloud/python/FileScan/Utils/")
 
 import RabbitmqProducer as Producer
