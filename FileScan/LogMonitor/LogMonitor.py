@@ -80,11 +80,11 @@ def start_watch():
     notifier = pyinotify.Notifier(wm, MyEventHandler())
     file_paths = get_value("log_file_monitor")
     while True:
+        time.sleep(5)
         if file_paths is not None:
             for inner_path in file_paths:
                 wm.add_watch(inner_path, multi_event)
         notifier.loop()
-        time.sleep(5)
         print("sleep 5")
 
 
