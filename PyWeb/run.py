@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request
-from utils import RedisUtils
+from PyWeb.utils import RedisUtils
 import requests
 import json
 
