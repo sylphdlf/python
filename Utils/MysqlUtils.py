@@ -11,6 +11,7 @@ class MysqlUtils:
     def get_connection():
         user = redis_.get("mysql_user")
         password = redis_.get("mysql_password")
+        print(user, password)
         conn = pymysql.connect(host='118.25.197.159', user=user, password=password, database='cloud')
         cursor = conn.cursor()
         return conn, cursor
