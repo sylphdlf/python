@@ -1,4 +1,4 @@
-from DataSpider.DataSpider.items import AmapItem
+from ..items import AmapItem
 import scrapy
 
 
