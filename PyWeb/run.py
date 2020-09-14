@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
-from PyWeb.utils import RedisUtils
+from Utils import RedisUtils
+from DataSpider.DataSpider.begin import amap_spider
 import requests
 import json
 
@@ -10,7 +11,7 @@ redis_ = RedisUtils.get_conn()
 
 
 @app.route('/cityAndWeather', methods=['GET'])
-def getLocation():
+def get_location():
     key = redis_.get("amap_key")
     location_last_url = "https://restapi.amap.com/v3/ip?ip=%s&output=json&key=%s" % (request.args.get('lastIp'), key)
     location_now_url = "https://restapi.amap.com/v3/ip?ip=%s&output=json&key=%s" % (request.args.get('ip'), key)
@@ -24,6 +25,12 @@ def getLocation():
     weather_forecast = requests.get(weather_url_forecast).json()
     result = json.dumps({"city": last_city, "lives": weather_live['lives'], "forecasts": weather_forecast['forecasts']})
     return result
+
+
+@app.route('/amapSpider', methods=['GET'])
+def run_amap_spider():
+    amap_spider()
+    return 'ok'
 
 
 if __name__ == '__main__':
