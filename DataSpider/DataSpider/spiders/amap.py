@@ -1,5 +1,5 @@
+from DataSpider.DataSpider.items import AmapItem
 import scrapy
-from ..items import AmapItem
 
 
 class AmapSpider(scrapy.Spider):
