@@ -1,6 +1,6 @@
-from scrapy import cmdline
+import os
 
-cmdline.execute(["scrapy", "crawl", "amap"])
+os.system("scrapy crawl amap")
 # def amap_spider():
 
 
