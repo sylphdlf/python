@@ -1,7 +1,7 @@
 # encoding=utf-8
 import pymysql as pymysql
 
-from ..DataSpider import RedisUtils
+from DataSpider.DataSpider import RedisUtils
 
 redis_ = RedisUtils.get_conn()
 
