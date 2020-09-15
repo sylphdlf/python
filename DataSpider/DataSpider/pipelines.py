@@ -4,7 +4,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-from Utils.MysqlUtils import MysqlUtils
+from ..Utils.MysqlUtils import MysqlUtils
 
 
 class DataspiderPipeline(object):
