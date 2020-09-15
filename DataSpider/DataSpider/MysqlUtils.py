@@ -1,13 +1,17 @@
 # encoding=utf-8
 import pymysql as pymysql
+import redis
 
-from DataSpider.DataSpider import RedisUtils
 
-redis_ = RedisUtils.get_conn()
+def get_conn():
+    pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
+    return redis.Redis(connection_pool=pool)
+
+
+redis_ = get_conn()
 
 
 class MysqlUtils:
-
     @staticmethod
     def get_connection():
         user = redis_.get("mysql_user")
